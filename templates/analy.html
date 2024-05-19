@@ -1,6 +1,7 @@
 {% extends "base.html" %}
-{% block title %} HOME {% endblock %}
+{% block title %} Analytics {% endblock %}
 {% block content %}
+<div style="background-color:ghostwhite">
 <script src="/new.js"></script>
 <br>
 <br>
@@ -18,40 +19,43 @@
     ></script>
 <h2>Analytics</h2>
 
-<section style="padding-left: 20%;">
-  <form>
-  <select class="dropdown btn btn-outline-secondary" style="width: 35%;">
-    {% for colour in pred %}
-        <option value="{{colour}}" id="selection" class="btn btn-secondary">{{colour}}</option>"
-    {% endfor %}
-</select>
-</form>
-</section>
 
 <section>
   {% for i in pred %}
     
     <br>
     <br>
-    <div>
-      <table class="table" style="display: none;" id="item">
+    <div class="card border-secondary mb-3" style="width: 65%; margin-left:20% ;padding: 20px; display: inline-block;">
+      <h3 class="card-title">{{i}}</h3>
+      <img src="{{ url_for ('static',filename=user+ '/'+ i +'.png')}}" class="card-img-top">
+      <div class="card-body">
+      <table class="table table-hover table-bordered" style="display: block;" id="item">
         <thead>
         <tr>
-          <th>Prediction</th>
-          <th>Actual</th>
+          <th>Date</th>
+          <th>Prediction (Wh)</th>
+          <th>Actual (Wh)</th>
         </tr>
       </thead>
       <tbody>
       {% for j in pred[i]%}
         <tr>
+          {% for jj in j %}
           <td>
-            {{j[0]}}
+            {{jj}}
           </td>
-          <td>{{j[1]}}</td>
+          <td>{{j[jj][0]}}</td>
+          <td>{{j[jj][1]}}</td>
         </tr>
       {% endfor %}
+      {%endfor%}
     </tbody>
     </table>
+    <br>
+    <h2> Working condition : {{ ef[i] }} % </h2>
+  </div>
+   
+    
     </div>
   {% endfor %}
   </section>
@@ -66,4 +70,6 @@
 <div style="height: 200px;"></div>
  
 <iframe title="PROJECT_DATA" width="100%" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=136e36a3-ecdb-433f-bdb3-45777c8ec949&autoAuth=true&embeddedDemo=true" frameborder="0" allowFullScreen="true"></iframe>
+
+</div>
 {% endblock %}

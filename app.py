@@ -1,10 +1,34 @@
-from flask import Flask,render_template,request,redirect,url_for,session # type: ignore
+from flask import Flask,render_template,request,redirect,url_for,session,flash # type: ignore
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
+from PIL import Image
+
 #from werkzeug.utils import secure_filename
 from xgboostpast import xg_boost_past
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+
+
+def makeimg(us,src,data):
+    fig, ax = plt.subplots()
+    x=[]
+    real = []
+    predict =[]
+    for i in data:
+        x.append(list(i.keys())[0])
+        predict.append(list(i.values())[0][0])
+        real.append(list(i.values())[0][1])
+    ax.set_title(f'Predicted vs actual yield for {src}')
+    ax.plot(x, predict, label = 'predicted yield')
+    ax.plot(x,real,label='actual yield')
+    ax.legend()
+    fig.canvas.draw()
+    buf = fig.canvas.tostring_rgb()
+    width, height = fig.canvas.get_width_height()
+    pil_image = Image.frombytes("RGB", (width, height), buf)
+    path =f'{os.getcwd()}/static/{us}/{src}.png'
+    pil_image.save(path)
 
 def getpass(username):
     users = pd.read_csv('userdata.csv')
@@ -50,10 +74,16 @@ def analytics():
     if 'user' in session:
         path = f'datasets/{session['user']}'
         pred = {}
+        fur = {}
+        effic = []
         files = [f for f in os.listdir(path)]
         for f in files:
-            pred[f] = (xg_boost_past(session['user'],f))
-        return render_template("analy.html",pred = pred)
+            f = f.split('.')[0]
+            pred[f],a = (xg_boost_past(session['user'],f))
+            effic.append(a)
+            fur[f] = a
+            makeimg(session['user'],f,pred[f])
+        return render_template("analy.html",pred = pred,user=session['user'],ef = fur)
     else:
         return redirect( url_for('signin') )
 @app.route('/signup', methods=['POST','GET'])
@@ -89,14 +119,15 @@ def upload():
                 # Save the file with the new name
                 file.save(os.path.join(f'datasets/{session['user']}', filename))
                 
-                return 'File uploaded successfully!'
+                flash("File uploaded sucessfuly")
+                return redirect(url_for('upload'))
         else:
             return render_template('upload.html')
     else:
         return redirect( url_for('signin') )
 @app.route('/ml')
 def ml():
-    return render_template('ml.html')
+    return render_template('bar&line.html')
 
 if __name__ == '__main__':  
   app.run(debug = True)
