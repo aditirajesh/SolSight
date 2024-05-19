@@ -46,11 +46,17 @@ def add_data(username,name,password):
         return
     users.loc[len(users.index)] = [username,name,password]
     users.to_csv('userdata.csv',index=False)
-    paths =f'/datasets/{username}'
+    paths =f'\datasets\{username}'
+    n = f'\static\{username}'
     cwd = os.getcwd()
-    path = os.path.join(cwd,paths)
+    s = cwd + paths
+    p = cwd+n
+    print(cwd)
+    print(s)
+    print(p)
     try:
-        os.mkdir(path)
+        os.mkdir(s)
+        os.mkdir(p)
     except:
         print()
 
