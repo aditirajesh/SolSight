@@ -35,7 +35,6 @@ def xg_boost_past(user,key):
     y2_pred = xg_regressor.predict(x_test)
     np.set_printoptions(precision=2)
     l = np.concatenate((y2_pred.reshape(len(y2_pred),1), y_test.reshape(len(y_test),1)),1)
-    print(l)
     nl = []
     res = []
     for i in range(len(l)):
@@ -47,4 +46,4 @@ def xg_boost_past(user,key):
     return nl,sum(res)/len(res)
 
 if __name__=='__main__':
-    print(xg_boost_past('adharsh_18','data16_1'))
+    print(xg_boost_past('user1','mypanel1'))

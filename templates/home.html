@@ -15,6 +15,11 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    {%if user!=''%}
+      <div class="container">
+        <p class="text-end">WELCOME {{user}}!</p>
+      </div>
+      {%endif%}
 
     <section id="carousel">
       <div
@@ -74,8 +79,7 @@
               <div class="col-lg-6 m-auto">
                   <h1 class="h1">About the app</h1>
                   <p>
-                      Reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                      Excepteur sint occaecat cupidatat non proident.
+                    The application allows users to input data related to their solar panels, such as energy production, environmental conditions, and maintenance status. It then provides analytics based on this data to help users understand the performance and health of their solar panels.
                   </p>
               </div>
           </div>
@@ -89,7 +93,7 @@
                           
                           <a href="{{ url_for('signup') }}" class="h2 text-decoration-none text-dark">Sign Up</a>
                           <p class="card-text">
-                              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt in culpa qui officia deserunt.
+                            Get started with SolSight by creating your account. Monitor your solar panel data and gain valuable insights to optimize performance.
                           </p>
                       </div>
                   </div>
@@ -100,9 +104,9 @@
                           <img src="/static/img/uploadhomee.jpg" class="card-img-top" alt="...">
                       </a>
                       <div class="card-body">
-                          <a href="{{ url_for( 'upload' ) }}" class="h2 text-decoration-none text-dark">Upload your plant data</a>
+                          <a href="{{ url_for( 'upload' ) }}" class="h3 text-decoration-none text-dark">Upload your plant data</a>
                           <p class="card-text">
-                              Aenean gravida dignissim finibus. Nullam ipsum diam, posuere vitae pharetra sed, commodo ullamcorper.
+                            Upload your solar panel data for insightful analytics. Monitor performance, track energy production, and optimize efficiency effortlessly
                           </p>
                       </div>
                   </div>
@@ -115,7 +119,7 @@
                       <div class="card-body">
                           <a class="h2 text-decoration-none text-dark">Analyze your data</a>
                           <p class="card-text">
-                              Curabitur ac mi sit amet diam luctus porta. Phasellus pulvinar sagittis diam, et scelerisque ipsum lobortis nec.
+                            Harness the power of data analysis for your solar panels. Gain valuable insights, optimize performance, and maximize efficiency with ease.
                           </p>
                       </div>
                   </div>

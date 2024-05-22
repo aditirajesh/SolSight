@@ -17,7 +17,10 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
-<h2>Analytics</h2>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script type="text/javascript" src="/static/js/script_barline.js"></script>
+    
+<h2 class="text-center">Analytics</h2>
 
 
 <section>
@@ -53,23 +56,167 @@
     </table>
     <br>
     <h2> Working condition : {{ ef[i] }} % </h2>
+    {% if ef[i]>95 %}
+      <h4 style="color: green;">The panel is in good condition</h4>
+    {% elif ef[i]>85 %}
+      <h4 style="color: rgba(255, 230, 0, 0.79);">The panel requires maintainence</h4>
+    {%else %}
+      <h4 style="color: red;">The panel is seriously damaged</h4>
+    {% endif %}
+    
+    <input type = "button" onclick = "parseAndCreateChart()" value = "Display old data" id="displayOldDataButton_{{i}}">  
+    <script>
+      document.getElementById("displayOldDataButton_{{i}}").addEventListener("click", function() {
+          // Make an AJAX request to fetch the data
+          var xhr = new XMLHttpRequest();
+          xhr.open("GET", "/get_data/{{i}}", true);
+          xhr.onreadystatechange = function() {
+              if (xhr.readyState === 4 && xhr.status === 200) {
+                  var data = JSON.parse(xhr.responseText);
+                  // Call your function with the fetched CSV data
+                  parseAndCreateChart(data.csvText);
+              }
+          };
+          xhr.send();
+      });
+  </script>
+ 
+
   </div>
    
     
     </div>
   {% endfor %}
-  </section>
-  
-<script>
-  $(function() {
-      $( "#button" ).click(function() {
-          $( "#item" ).toggle();
-      });
-  });
-  </script>
-<div style="height: 200px;"></div>
  
+  <canvas id="myChart" width="400" height="200"></canvas>
+</section>
+  
+  
+
+
+
+
+<div style="height: 200px;"></div>
+
+
+
+
 <iframe title="PROJECT_DATA" width="100%" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=136e36a3-ecdb-433f-bdb3-45777c8ec949&autoAuth=true&embeddedDemo=true" frameborder="0" allowFullScreen="true"></iframe>
 
+
 </div>
+<script>
+  function parseAndCreateChart(csvText) {
+    // Parsing the CSV data
+    const lines = csvText.split('\n');
+    const headers = lines[0].split(',');
+
+    const dates = [];
+    const ambientTemps = [];
+    const moduleTemps = [];
+    const sunHours = [];
+    const yields = [];
+
+    for (let i = 1; i < lines.length; i++) {
+        const data = lines[i].split(',');
+        if (data.length === headers.length) {
+            dates.push(data[0]);
+            ambientTemps.push(parseFloat(data[1]));
+            moduleTemps.push(parseFloat(data[2]));
+            sunHours.push(parseFloat(data[3]));
+            yields.push(parseInt(data[4]));
+        }
+    }
+
+    // Creating the chart with vertical bars and horizontal lines
+    const ctx = document.getElementById('myChart').getContext('2d');
+//    const newTab = window.open();
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dates,
+            datasets: [
+                {
+                    label: 'Yield (J)',
+                    type: 'bar',
+                    data: yields,
+                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    borderWidth: 1,
+                    yAxisID: 'y-axis-1'
+                },
+                {
+                    label: 'Ambient Temp (°C)',
+                    type: 'line',
+                    data: ambientTemps,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false,
+                    yAxisID: 'y-axis-2'
+                },
+                {
+                    label: 'Module Temp (°C)',
+                    type: 'line',
+                    data: moduleTemps,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 2,
+                    fill: false,
+                    yAxisID: 'y-axis-2'
+                },
+                {
+                    label: 'Sun Hours',
+                    type: 'line',
+                    data: sunHours,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    fill: false,
+                    yAxisID: 'y-axis-2'
+                }
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [
+                    {
+                        id: 'y-axis-1',
+                        type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            beginAtZero: true
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Yield'
+                        }
+                    },
+                    {
+                        id: 'y-axis-2',
+                        type: 'linear',
+                        position: 'right',
+                        ticks: {
+                            beginAtZero: true
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Temperature (°C) / Sun Hours'
+                        }
+                    }
+                ],
+                xAxes: [
+                    {
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date'
+                        }
+                    }
+                ]
+            }
+        }
+    });
+}
+
+</script>
 {% endblock %}

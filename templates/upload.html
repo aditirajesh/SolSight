@@ -11,6 +11,14 @@
 <body>
     <section style="padding-left: 10%;">
         <h1>Add a new source</h1>
+        <br>
+        {%if message!=''%}
+            {%if 'success' in message%}
+                <h5 class="alert alert-sucess" style="width:50%;">{{message}}</h5>
+            {%else%}
+                <h5 class="alert alert-danger" style="width:50%;">{{message}}</h5>
+            {%endif%}
+        {%endif%}
         <form style="max-width: 70%;padding-top: 3%;" method="POST" enctype="multipart/form-data">
             <div class="form-floating">
                 <input type="text" name="name" class="form-control" id="floatingInput" placeholder="name">
