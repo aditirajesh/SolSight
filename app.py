@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 from PIL import Image
+from gradient_boosting import realtime_data
 
 #from werkzeug.utils import secure_filename
 from xgboostpast import xg_boost_past
@@ -76,7 +77,8 @@ def signin():
             return redirect( url_for("home"))
         else:
             m = 'invalid username or password'
-            return render_template("signin.html",message = m)          
+            return render_template("signin.html",message = m)
+   session.clear()        
    return render_template("signin.html",message=m)
 
 @app.route('/analytics')
@@ -88,15 +90,20 @@ def analytics():
         effic = []
         files = [f for f in os.listdir(path)]
         pds = {}
+        y = {}
+        irr = {}
+        amb ={}
+        m = {}
         for f in files:
             d = (open(f'{path}/{f}',mode = 'r').read())
             f = f.split('.')[0]
             pds[f] = d
             pred[f],a = (xg_boost_past(session['user'],f))
+            y[f],irr[f],amb[f],m[f] = realtime_data(session['user'],f)
             effic.append(a)
             fur[f] = a
             makeimg(session['user'],f,pred[f])
-        return render_template("analy.html",pred = pred,user=session['user'],ef = fur,pds = pds)
+        return render_template("analy.html",pred = pred,user=session['user'],ef = fur,pds = pds,y=y,irr = irr,amb = amb,mod = m)
     else:
         return redirect( url_for('signin') )
 

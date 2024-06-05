@@ -88,7 +88,7 @@ def realtime_data(user,key):
     str_time = current_time.strftime("%H:%M:%S")
 
     print('Yield Obtained at',str_time,'is: ',yield_obtained)
-    
+    return yield_obtained,irradiance,ambient_temp,modular_temp
 if __name__ == "__main__":
     realtime_data('user1','panel2')
 

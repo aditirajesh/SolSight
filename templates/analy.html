@@ -54,17 +54,40 @@
       {%endfor%}
     </tbody>
     </table>
+    <div class="card" style="padding:15px; background-color:#e1dbd6;">
+    <h5>Live yield predicted : <span style="font-size: larger;">{{y[i]}}Wh</span></h5>
+    <h5>Live irradiance : <span style="font-size: larger;">{{irr[i][0]}}W/m2</span></h5>
+    <h5>Live Temperature : <span style="font-size: larger;">{{amb[i][0]}}*C</span></h5>
+    <h5>Live Module temp : <span style="font-size: larger;">{{mod[i][0]}}*C</span></h5>
+  </div>
     <br>
     <h2> Working condition : {{ ef[i] }} % </h2>
     {% if ef[i]>95 %}
       <h4 style="color: green;">The panel is in good condition</h4>
     {% elif ef[i]>85 %}
       <h4 style="color: rgba(255, 230, 0, 0.79);">The panel requires maintainence</h4>
+      <a class="btn btn-outline-warning" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        See how
+      </a>
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+          Maintaining solar panels is crucial for ensuring optimal performance and longevity. Here are some suggestions for solar panel maintenance:<br>
+
+<strong>Regular Cleaning:</strong> Dust, dirt, bird droppings, and other debris can accumulate on solar panels and reduce their efficiency. Clean the panels regularly with water and a soft brush or sponge. Avoid abrasive materials that could scratch the surface.
+<br>
+<strong>Inspect for Damage:</strong> Periodically inspect the panels for any signs of damage such as cracks, chips, or loose connections. Damaged panels should be repaired or replaced promptly to prevent further deterioration.
+<br>
+<strong>Trim Surrounding Vegetation:</strong> Trees or bushes near the solar panels can cast shadows and reduce their efficiency. Trim back any overhanging branches or vegetation to ensure maximum sunlight exposure.
+<br>
+<strong>Check for Shading:</strong> Ensure that there are no new obstructions that could cause shading on the panels, such as new buildings or structures nearby. Even small amounts of shading can significantly impact solar panel performance.
+        </div>
+      </div>
+      
     {%else %}
       <h4 style="color: red;">The panel is seriously damaged</h4>
     {% endif %}
     
-    <input type = "button" onclick = "parseAndCreateChart()" value = "Display old data" id="displayOldDataButton_{{i}}">  
+    <input type = "button" onclick = "parseAndCreateChart()" value = "Display old data" id="displayOldDataButton_{{i}}" class="btn btn-outline-primary">  
     <script>
       document.getElementById("displayOldDataButton_{{i}}").addEventListener("click", function() {
           // Make an AJAX request to fetch the data

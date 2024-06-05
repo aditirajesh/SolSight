@@ -39,13 +39,6 @@
             </div>
           </div>
           <div class="carousel-item">
-            <img src="./static/img/home2.jpg" class="d-block w-100" alt="..." />
-            <div class="carousel-caption">
-              <h3>Track individually</h3>
-              <p>Track the features of all tables seperately</p>
-            </div>
-          </div>
-          <div class="carousel-item">
             <img src="./static/img/home3.jpg" class="d-block w-100" alt="..." />
             <div class="carousel-caption">
               <h3>Track individually</h3>
@@ -55,8 +48,8 @@
           <div class="carousel-item">
             <img src="./static/img/home4.jpg" class="d-block w-100" alt="..." />
             <div class="carousel-caption">
-              <h3>Track individually</h3>
-              <p>Track the features of all tables seperately</p>
+              <h3>Real Time Tracking</h3>
+              <p>Analyze all features in real time</p>
             </div>
           </div>
         </div>
@@ -129,7 +122,11 @@
           </div>
 
           <div class="container" style="padding-top: 3%;">
+          {%if user==''%}
           <a href="{{ url_for('signin')}}" class="btn btn-outline-primary" style="width: 50%; margin-left:25%; height: 40px;">GET STARTED</a>
+          {%else%}
+          <a href="{{ url_for('signin')}}" class="btn btn-outline-danger" style="width: 50%; margin-left:25%; height: 40px;">SIGN OUT</a>
+          {%endif%}
         </div>
   </section>
   </body>
