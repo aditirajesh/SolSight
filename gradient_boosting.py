@@ -2,21 +2,20 @@ import pandas as pd
 import numpy as np 
 from xgboost import XGBRegressor
 import datetime
+import datetime
 from sklearn.model_selection import train_test_split,RandomizedSearchCV
 from extract_data import request_data
+import schedule
 import time 
 import pytz
 
-def realtime_data(user,key):
-    path =f'./datasets/{user}/{key}.csv'
-    df = pd.read_csv(path)
+def realtime_data(csvfile):
+    df = pd.read_csv(csvfile)
     df['YIELD'] = pd.to_numeric(df['YIELD'])
     df['DATE'] = pd.to_datetime(df['DATE'])
 
     x = df.iloc[:,1:4].values
     y = df.iloc[:,-1].values
-
-    #x_train,x_test,y_train,y_test = train_test_split(x,y,random_state=1)
 
     xg_regressor_yield= XGBRegressor(base_score=0.5, booster='gbtree', colsample_bylevel=1,
        colsample_bytree=0.9, gamma=0.1, learning_rate=1,
@@ -29,7 +28,7 @@ def realtime_data(user,key):
     xg_regressor_yield.fit(x,y)
     print('regression complete')
 
-    df_module = pd.read_csv(path,usecols=['AMBIENT_TEMP','SUN_HOURS','MODULE_TEMP'])
+    df_module = pd.read_csv(csvfile,usecols=['AMBIENT_TEMP','SUN_HOURS','MODULE_TEMP'])
     order = ['AMBIENT_TEMP','SUN_HOURS','MODULE_TEMP']
     df_module = df_module[order]
     
@@ -88,9 +87,9 @@ def realtime_data(user,key):
     str_time = current_time.strftime("%H:%M:%S")
 
     print('Yield Obtained at',str_time,'is: ',yield_obtained)
-    return yield_obtained,irradiance,ambient_temp,modular_temp
+
 if __name__ == "__main__":
-    realtime_data('user1','panel2')
+    realtime_data("/Users/aditirajesh/Desktop/program_files/python/SolSight/DATA_PLANTS/plant1/data1_1.csv")
 
 
 
